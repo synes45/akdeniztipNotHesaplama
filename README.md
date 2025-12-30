@@ -6,9 +6,9 @@
 
 Bu proje modern web teknolojileri ile performanslı ve şık olacak şekilde geliştirilmiştir:
 
-- **Dil:** [TypeScript](https://www.typescriptlang.org/) - Tip güvenliği ve hatasız kod yapısı için.
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/) - Modern, hızlı ve responsive (mobil uyumlu) tasarım için.
-- **Deployment:** [Netlify](https://www.netlify.com/) - Hızlı ve global erişilebilir yayınlama.
+- **Dil:** [TypeScript](https://www.typescriptlang.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Deployment:** [Netlify](https://www.netlify.com/) 
 
 ## 🚀 Kurulum ve Başlangıç
 
