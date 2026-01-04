@@ -197,8 +197,6 @@ export default function Home() {
         </div>
       </div>
 
-      <meta name="google-adsense-account" content="ca-pub-3801726997875406">
-
       <footer className="w-full max-w-md mt-10 mb-6 flex items-center justify-center gap-4">
         <div className={`h-[1px] flex-grow ${darkMode ? 'bg-zinc-900' : 'bg-zinc-200'}`}></div>
         <div className="flex items-center gap-2">
