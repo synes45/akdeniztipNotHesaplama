@@ -159,8 +159,8 @@ export default function Home() {
 
           {!shareMode && (
             <div className={`mt-8 inline-flex p-1 rounded-xl transition-all ${darkMode ? 'bg-zinc-900 border border-zinc-800' : 'bg-zinc-200/50'}`}>
-              <button onClick={() => setActiveTab('d1')} className={`px-6 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 ${activeTab === 'd1' ? (darkMode ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900 shadow-sm') : 'text-zinc-500'}`}>DÖNEM 1</button>
-              <button onClick={() => setActiveTab('d2')} className={`px-6 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 ${activeTab === 'd2' ? (darkMode ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900 shadow-sm') : 'text-zinc-500'}`}>DÖNEM 1 TEKRARI</button>
+              <button onClick={() => setActiveTab('d1')} className={`px-6 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 ${activeTab === 'd1' ? (darkMode ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900 shadow-sm') : 'text-zinc-500'}`}>'25 Girişliler</button>
+              <button onClick={() => setActiveTab('d2')} className={`px-6 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 ${activeTab === 'd2' ? (darkMode ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900 shadow-sm') : 'text-zinc-500'}`}>'24 Girişliler</button>
             </div>
           )}
         </header>
