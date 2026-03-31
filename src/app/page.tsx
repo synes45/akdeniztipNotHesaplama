@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const initialScores = {
-    k1: '', k2: '', k2_pdo: '', k3: '', k3_pdo: '', k4: '', k4_pdo: '',
+    k1: '', k2: '', k2_pdo: '', k3: '', k3_pdo: '', k3_anatomi: '', k3_histo: '', k4: '', k4_pdo: '',
     dsbb: '', tdp: '', final: ''
   };
 
@@ -48,7 +48,9 @@ export default function Home() {
 
   const handleInputChange = (id: string, value: string) => {
     let num = Number(value);
-    if (num > 100) num = 100;
+    if (id === 'k3_anatomi' && num > 17) num = 17;
+    if (id === 'k3_histo' && num > 8) num = 8;
+    if (!id.includes('anatomi') && !id.includes('histo') && num > 100) num = 100;
     if (num < 0) num = 0;
     
     const valStr = value === '' ? '' : num.toString();
@@ -60,13 +62,17 @@ export default function Home() {
   };
 
   const calculateResults = (currentScores: typeof initialScores, tab: string) => {
-    const { k1, k2, k2_pdo, k3, k3_pdo, k4, k4_pdo, dsbb, tdp, final } = currentScores;
-    const allExamsEntered = [k1, k2, k2_pdo, k3, k3_pdo, k4, k4_pdo, dsbb, tdp].every(val => val !== '');
-    if (!allExamsEntered) return { ready: false };
+    const { k1, k2, k2_pdo, k3, k3_pdo, k3_anatomi, k3_histo, k4, k4_pdo, dsbb, tdp, final } = currentScores;
+    
+    const requiredK3 = [k3, k3_pdo, k3_anatomi, k3_histo].every(val => val !== '');
+    const othersEntered = [k1, k2, k2_pdo, k4, k4_pdo, dsbb, tdp].every(val => val !== '');
+    
+    if (!requiredK3 || !othersEntered) return { ready: false };
 
     const n = (val: string) => Number(val);
     const realK2 = (n(k2) * 0.85) + (n(k2_pdo) * 0.15);
-    const realK3 = (n(k3) * 0.85) + (n(k3_pdo) * 0.15);
+    const k3SınavNotu = (n(k3) * 0.75) + n(k3_anatomi) + n(k3_histo);
+    const realK3 = (k3SınavNotu * 0.85) + (n(k3_pdo) * 0.15);
     const realK4 = (n(k4) * 0.85) + (n(k4_pdo) * 0.15);
 
     let yilIciAğırlıklı = 0;
@@ -86,10 +92,6 @@ export default function Home() {
 
   const activeScores = activeTab === 'd1' ? scoresD1 : scoresD2;
   const results = calculateResults(activeScores, activeTab);
-  
-  const currentWeights = activeTab === 'd1' 
-    ? { k1: '%22', k2: '%18', k3: '%30', k4: '%16' }
-    : { k1: '%14', k2: '%22', k3: '%32', k4: '%18' };
 
   if (!isLoaded) return null;
 
@@ -100,24 +102,61 @@ export default function Home() {
 
     return (
       <div className="w-full flex-shrink-0 px-1 space-y-4 text-left">
+        {/* K1 */}
         <div>
           <label className="block text-[9px] font-black text-zinc-500 uppercase mb-1 ml-1 tracking-widest">K1 Sınavı ({panelWeights.k1})</label>
-          <input type="number" placeholder="0" value={s.k1} onChange={(e) => handleInputChange('k1', e.target.value)} className={`w-full border-none rounded-2xl p-4 text-lg font-medium outline-none transition-all placeholder:text-zinc-600 ${darkMode ? 'bg-zinc-900 text-white focus:ring-2 focus:ring-zinc-700' : 'bg-white shadow-sm focus:ring-2 focus:ring-zinc-200'}`} />
+          <input type="number" placeholder="0" value={s.k1} onChange={(e) => handleInputChange('k1', e.target.value)} className={`w-full border-none rounded-2xl p-4 text-lg font-medium outline-none transition-all ${darkMode ? 'bg-zinc-900 text-white' : 'bg-white shadow-sm'}`} />
         </div>
 
-        {[2, 3, 4].map(num => (
-          <div key={num} className={`grid grid-cols-2 gap-3 p-3 rounded-2xl border transition-colors ${darkMode ? 'bg-zinc-900/50 border-zinc-800' : 'bg-white border-zinc-100 shadow-sm'}`}>
+        {/* K2 */}
+        <div className={`grid grid-cols-2 gap-3 p-3 rounded-2xl border transition-colors ${darkMode ? 'bg-zinc-900/50 border-zinc-800' : 'bg-white border-zinc-100 shadow-sm'}`}>
+          <div>
+            <label className="block text-[9px] font-black text-zinc-500 uppercase mb-1 ml-1">K2 Sınav ({panelWeights.k2})</label>
+            <input type="number" placeholder="0" value={s.k2} onChange={(e) => handleInputChange('k2', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800 text-white' : 'bg-zinc-50'}`} />
+          </div>
+          <div>
+            <label className="block text-[9px] font-black text-zinc-400 uppercase mb-1 ml-1 tracking-tighter">K2 PDÖ</label>
+            <input type="number" placeholder="0" value={s.k2_pdo} onChange={(e) => handleInputChange('k2_pdo', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/40 text-zinc-500' : 'bg-zinc-100/50 text-zinc-400'}`} />
+          </div>
+        </div>
+
+        {/* K3 */}
+        <div className={`p-3 rounded-2xl border transition-colors space-y-3 ${darkMode ? 'bg-zinc-900/50 border-zinc-800' : 'bg-white border-zinc-100 shadow-sm'}`}>
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-[9px] font-black text-zinc-500 uppercase mb-1 ml-1">K{num} Sınav ({(panelWeights as any)[`k${num}`]})</label>
-              <input type="number" placeholder="0" value={(s as any)[`k${num}`]} onChange={(e) => handleInputChange(`k${num}`, e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800 text-white' : 'bg-zinc-50'}`} />
+              <label className="block text-[9px] font-black text-zinc-500 uppercase mb-1 ml-1">K3 Teorik ({panelWeights.k3})</label>
+              <input type="number" placeholder="0" value={s.k3} onChange={(e) => handleInputChange('k3', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800 text-white' : 'bg-zinc-50'}`} />
             </div>
             <div>
-              <label className="block text-[9px] font-black text-zinc-400 uppercase mb-1 ml-1 tracking-tighter">K{num} PDÖ</label>
-              <input type="number" placeholder="0" value={(s as any)[`k${num}_pdo`]} onChange={(e) => handleInputChange(`k${num}_pdo`, e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/40 text-zinc-500' : 'bg-zinc-100/50 text-zinc-400'}`} />
+              <label className="block text-[9px] font-black text-zinc-400 uppercase mb-1 ml-1 tracking-tighter">K3 PDÖ</label>
+              <input type="number" placeholder="0" value={s.k3_pdo} onChange={(e) => handleInputChange('k3_pdo', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/40 text-zinc-500' : 'bg-zinc-100/50 text-zinc-400'}`} />
             </div>
           </div>
-        ))}
+          <div className="grid grid-cols-2 gap-3 border-t pt-3 border-zinc-800/10">
+            <div>
+              <label className="block text-[8px] font-black text-zinc-400 uppercase mb-1 ml-1">Anatomi Pratik (max 17)</label>
+              <input type="number" placeholder="0" value={s.k3_anatomi} onChange={(e) => handleInputChange('k3_anatomi', e.target.value)} className={`w-full border-none rounded-xl p-2 text-sm font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/60 text-zinc-400' : 'bg-zinc-50 text-zinc-500'}`} />
+            </div>
+            <div>
+              <label className="block text-[8px] font-black text-zinc-400 uppercase mb-1 ml-1">Histo Pratik (max 8)</label>
+              <input type="number" placeholder="0" value={s.k3_histo} onChange={(e) => handleInputChange('k3_histo', e.target.value)} className={`w-full border-none rounded-xl p-2 text-sm font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/60 text-zinc-400' : 'bg-zinc-50 text-zinc-500'}`} />
+            </div>
+          </div>
+        </div>
 
+        {/* K4 */}
+        <div className={`grid grid-cols-2 gap-3 p-3 rounded-2xl border transition-colors ${darkMode ? 'bg-zinc-900/50 border-zinc-800' : 'bg-white border-zinc-100 shadow-sm'}`}>
+          <div>
+            <label className="block text-[9px] font-black text-zinc-500 uppercase mb-1 ml-1">K4 Sınav ({panelWeights.k4})</label>
+            <input type="number" placeholder="0" value={s.k4} onChange={(e) => handleInputChange('k4', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800 text-white' : 'bg-zinc-50'}`} />
+          </div>
+          <div>
+            <label className="block text-[9px] font-black text-zinc-400 uppercase mb-1 ml-1 tracking-tighter">K4 PDÖ</label>
+            <input type="number" placeholder="0" value={s.k4_pdo} onChange={(e) => handleInputChange('k4_pdo', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/40 text-zinc-500' : 'bg-zinc-100/50 text-zinc-400'}`} />
+          </div>
+        </div>
+
+        {/* DSBB & TDP */}
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="block text-[9px] font-black text-zinc-500 uppercase mb-1 ml-1 tracking-widest">DSBB (%10)</label>
@@ -181,15 +220,15 @@ export default function Home() {
           {isCalculating ? (
             <div className="w-6 h-6 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin"></div>
           ) : !results.ready ? (
-            <p className="text-zinc-500 font-medium text-center italic">Notlarınızın girilmesi gerekiyor...</p>
+            <p className="text-zinc-500 font-medium text-center italic">Tüm sınavlar ve pratikler girilmeli...</p>
           ) : (
             <div className="flex justify-between items-end w-full">
               <div className="text-left">
                 <p className="text-[10px] font-bold uppercase tracking-widest mb-1 text-zinc-500">Ortalama</p>
-                <p className={`text-5xl font-black tracking-tighter transition-all duration-300 ${Number(results.genelNot) >= 59.5 ? 'text-emerald-500' : ''}`}>{results.genelNot}</p>
+                <p className={`text-5xl font-black tracking-tighter transition-all duration-300 ${darkMode ? 'text-zinc-100' : 'text-zinc-800'}`}>{results.genelNot}</p>
               </div>
               <div className="text-right flex flex-col items-end">
-                <p className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-1">Gereken Final</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest opacity-60 mb-1 text-zinc-500">Gereken Final</p>
                 <p className={`text-2xl font-bold tracking-tight transition-colors duration-300 ${results.isImpossible ? 'text-red-500' : 'text-zinc-400'}`}>{results.gerekenFinal}</p>
               </div>
             </div>
@@ -201,10 +240,9 @@ export default function Home() {
         <div className={`h-[1px] flex-grow ${darkMode ? 'bg-zinc-900' : 'bg-zinc-200'}`}></div>
         <div className="flex items-center gap-2">
           <span className="text-[9px] opacity-50">🖤</span>
-          <a href="https://www.instagram.com/efe.jsx" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 group">
+          <a href="" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 group">
             <p className={`text-[9px] font-medium uppercase tracking-[0.4em] whitespace-nowrap ${darkMode ? 'text-zinc-600' : 'text-zinc-400'}`}>made by</p>
-            <svg className={`${darkMode ? 'text-zinc-600' : 'text-zinc-400'} group-hover:text-zinc-100 transition-colors`} xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-            <p className={`text-[9px] font-bold ${darkMode ? 'text-zinc-500' : 'text-zinc-900'} group-hover:text-zinc-100 transition-colors uppercase tracking-[0.4em]`}>efe</p>
+            <p className={`text-[9px] font-bold ${darkMode ? 'text-zinc-500' : 'text-zinc-900'} group-hover:text-zinc-100 transition-colors uppercase tracking-[0.4em]`}>efe küçükoğlu</p>
           </a>
         </div>
         <div className={`h-[1px] flex-grow ${darkMode ? 'bg-zinc-900' : 'bg-zinc-200'}`}></div>
