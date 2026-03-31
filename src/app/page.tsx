@@ -79,7 +79,7 @@ export default function Home() {
     const genelNot = (yilIciAğırlıklı * 0.6) + (n(final) * 0.4);
     let gerekenFinal = (59.5 - (yilIciAğırlıklı * 0.6)) / 0.4;
     const isImpossible = gerekenFinal > 100;
-    if (gerekenFinal < 50) gerekenFinal = 50; 
+    if (gerekenFinal < 40) gerekenFinal = 40; 
 
     return { ready: true, genelNot: genelNot.toFixed(2), gerekenFinal: gerekenFinal.toFixed(1), isImpossible };
   };
