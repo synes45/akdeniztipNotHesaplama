@@ -48,8 +48,8 @@ export default function Home() {
 
   const handleInputChange = (id: string, value: string) => {
     let num = Number(value);
-    if (id === 'k3_anatomi' && num > 17) num = 17;
-    if (id === 'k3_histo' && num > 8) num = 8;
+    if (id === 'k3_anatomi' && num > 18) num = 18;
+    if (id === 'k3_histo' && num > 7) num = 7;
     if (!id.includes('anatomi') && !id.includes('histo') && num > 100) num = 100;
     if (num < 0) num = 0;
     
@@ -134,11 +134,11 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 gap-3 border-t pt-3 border-zinc-800/10">
             <div>
-              <label className="block text-[8px] font-black text-zinc-400 uppercase mb-1 ml-1">Anatomi Pratik (max 17)</label>
+              <label className="block text-[8px] font-black text-zinc-400 uppercase mb-1 ml-1">Anatomi Pratik (max 18)</label>
               <input type="number" placeholder="0" value={s.k3_anatomi} onChange={(e) => handleInputChange('k3_anatomi', e.target.value)} className={`w-full border-none rounded-xl p-2 text-sm font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/60 text-zinc-400' : 'bg-zinc-50 text-zinc-500'}`} />
             </div>
             <div>
-              <label className="block text-[8px] font-black text-zinc-400 uppercase mb-1 ml-1">Histo Pratik (max 8)</label>
+              <label className="block text-[8px] font-black text-zinc-400 uppercase mb-1 ml-1">Histo Pratik (max 7)</label>
               <input type="number" placeholder="0" value={s.k3_histo} onChange={(e) => handleInputChange('k3_histo', e.target.value)} className={`w-full border-none rounded-xl p-2 text-sm font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/60 text-zinc-400' : 'bg-zinc-50 text-zinc-500'}`} />
             </div>
           </div>
