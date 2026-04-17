@@ -196,6 +196,20 @@ export default function Home() {
           </h1>
           <p className="text-zinc-500 text-[10px] mt-2 font-medium uppercase tracking-[0.3em]">Not Hesaplayıcı</p>
 
+          <div className="mt-4 flex justify-center">
+    <Link
+      href="/hesaplama"
+      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] transition-all active:scale-95 ${
+        darkMode
+          ? 'bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800'
+          : 'bg-white border border-zinc-200 text-zinc-600 shadow-sm hover:bg-zinc-50'
+      }`}
+    >
+      Nasıl Hesaplanır
+      <span className="opacity-60">→</span>
+    </Link>
+  </div>
+
           {!shareMode && (
             <div className={`mt-8 inline-flex p-1 rounded-xl transition-all ${darkMode ? 'bg-zinc-900 border border-zinc-800' : 'bg-zinc-200/50'}`}>
               <button onClick={() => setActiveTab('d1')} className={`px-6 py-2 rounded-lg text-[11px] font-bold transition-all duration-300 ${activeTab === 'd1' ? (darkMode ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900 shadow-sm') : 'text-zinc-500'}`}>'25 Girişliler</button>
