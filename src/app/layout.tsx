@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Akdeniz Tıp - Not Hesaplama",
   description: "Akdeniz Tıp Dönem 1 Öğrencileri İçin Not Hesaplama aracı.",
-  keywords: ["Akdeniz Tıp", "Not Hesaplama", "Tıp Fakültesi", "Dönem 1", "Akdeniz Üniversitesi", "Kurul Notu Hesaplama", "Akdü", "Akdü tıp", "Akdü tıp not",],
+  keywords: ["Akdeniz Tıp", "Not Hesaplama", "Tıp Fakültesi", "Dönem 1", "Akdeniz Üniversitesi", "Kurul Notu Hesaplama", "Akdü", "Akdü tıp", "Akdü tıp not", "Akdü not",],
   authors: [{ name: "Efe Küçükoğlu" }],
 };
 
