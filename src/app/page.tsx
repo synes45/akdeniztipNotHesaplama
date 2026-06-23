@@ -1,12 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-
 import { useState, useEffect } from 'react';
 
 export default function Home() {
   const initialScores = {
-    k1: '', k2: '', k2_pdo: '', k3: '', k3_pdo: '', k3_anatomi: '', k3_histo: '', k4: '', k4_pdo: '',
+    k1: '', k2: '', k2_pdo: '', k3: '', k3_pdo: '', k3_anatomi: '', k3_histo: '', 
+    k4: '', k4_pdo: '', k4_anatomi: '', 
     dsbb: '', tdp: '', final: ''
   };
 
@@ -64,18 +64,22 @@ export default function Home() {
   };
 
   const calculateResults = (currentScores: typeof initialScores, tab: string) => {
-    const { k1, k2, k2_pdo, k3, k3_pdo, k3_anatomi, k3_histo, k4, k4_pdo, dsbb, tdp, final } = currentScores;
+    const { k1, k2, k2_pdo, k3, k3_pdo, k3_anatomi, k3_histo, k4, k4_pdo, k4_anatomi, dsbb, tdp, final } = currentScores;
     
     const requiredK3 = [k3, k3_pdo, k3_anatomi, k3_histo].every(val => val !== '');
-    const othersEntered = [k1, k2, k2_pdo, k4, k4_pdo, dsbb, tdp].every(val => val !== '');
+    const requiredK4 = [k4, k4_pdo, k4_anatomi].every(val => val !== ''); 
+    const othersEntered = [k1, k2, k2_pdo, dsbb, tdp].every(val => val !== '');
     
-    if (!requiredK3 || !othersEntered) return { ready: false };
+    if (!requiredK3 || !requiredK4 || !othersEntered) return { ready: false };
 
     const n = (val: string) => Number(val);
     const realK2 = (n(k2) * 0.85) + (n(k2_pdo) * 0.15);
+    
     const k3SınavNotu = (n(k3) * 0.75) + n(k3_anatomi) + n(k3_histo);
     const realK3 = (k3SınavNotu * 0.85) + (n(k3_pdo) * 0.15);
-    const realK4 = (n(k4) * 0.85) + (n(k4_pdo) * 0.15);
+    
+    const k4SınavNotu = (n(k4) * 0.82) + n(k4_anatomi);
+    const realK4 = (k4SınavNotu * 0.85) + (n(k4_pdo) * 0.15);
 
     let yilIciAğırlıklı = 0;
     if (tab === 'd1') {
@@ -147,14 +151,22 @@ export default function Home() {
         </div>
 
         {/* K4 */}
-        <div className={`grid grid-cols-2 gap-3 p-3 rounded-2xl border transition-colors ${darkMode ? 'bg-zinc-900/50 border-zinc-800' : 'bg-white border-zinc-100 shadow-sm'}`}>
-          <div>
-            <label className="block text-[9px] font-black text-zinc-500 uppercase mb-1 ml-1">K4 Sınav ({panelWeights.k4})</label>
-            <input type="number" placeholder="0" value={s.k4} onChange={(e) => handleInputChange('k4', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800 text-white' : 'bg-zinc-50'}`} />
+        <div className={`p-3 rounded-2xl border transition-colors space-y-3 ${darkMode ? 'bg-zinc-900/50 border-zinc-800' : 'bg-white border-zinc-100 shadow-sm'}`}>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[9px] font-black text-zinc-500 uppercase mb-1 ml-1">K4 Teorik ({panelWeights.k4})</label>
+              <input type="number" placeholder="0" value={s.k4} onChange={(e) => handleInputChange('k4', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800 text-white' : 'bg-zinc-50'}`} />
+            </div>
+            <div>
+              <label className="block text-[9px] font-black text-zinc-400 uppercase mb-1 ml-1 tracking-tighter">K4 PDÖ</label>
+              <input type="number" placeholder="0" value={s.k4_pdo} onChange={(e) => handleInputChange('k4_pdo', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/40 text-zinc-500' : 'bg-zinc-100/50 text-zinc-400'}`} />
+            </div>
           </div>
-          <div>
-            <label className="block text-[9px] font-black text-zinc-400 uppercase mb-1 ml-1 tracking-tighter">K4 PDÖ</label>
-            <input type="number" placeholder="0" value={s.k4_pdo} onChange={(e) => handleInputChange('k4_pdo', e.target.value)} className={`w-full border-none rounded-xl p-3 text-base font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/40 text-zinc-500' : 'bg-zinc-100/50 text-zinc-400'}`} />
+          <div className="grid grid-cols-1 border-t pt-3 border-zinc-800/10">
+            <div>
+              <label className="block text-[8px] font-black text-zinc-400 uppercase mb-1 ml-1">Anatomi Pratik</label>
+              <input type="number" placeholder="0" value={s.k4_anatomi} onChange={(e) => handleInputChange('k4_anatomi', e.target.value)} className={`w-full border-none rounded-xl p-2 text-sm font-semibold outline-none transition-all ${darkMode ? 'bg-zinc-800/60 text-zinc-400' : 'bg-zinc-50 text-zinc-500'}`} />
+            </div>
           </div>
         </div>
 
@@ -199,18 +211,18 @@ export default function Home() {
           <p className="text-zinc-500 text-[10px] mt-2 font-medium uppercase tracking-[0.3em]">Not Hesaplayıcı</p>
 
           <div className="mt-4 flex justify-center">
-    <Link
-      href="/hesaplama"
-      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] transition-all active:scale-95 ${
-        darkMode
-          ? 'bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800'
-          : 'bg-white border border-zinc-200 text-zinc-600 shadow-sm hover:bg-zinc-50'
-      }`}
-    >
-      Nasıl Hesaplanır
-      <span className="opacity-60">→</span>
-    </Link>
-  </div>
+            <Link
+              href="/hesaplama"
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] transition-all active:scale-95 ${
+                darkMode
+                  ? 'bg-zinc-900 border border-zinc-800 text-zinc-300 hover:bg-zinc-800'
+                  : 'bg-white border border-zinc-200 text-zinc-600 shadow-sm hover:bg-zinc-50'
+              }`}
+            >
+              Nasıl Hesaplanır
+              <span className="opacity-60">→</span>
+            </Link>
+          </div>
 
           {!shareMode && (
             <div className={`mt-8 inline-flex p-1 rounded-xl transition-all ${darkMode ? 'bg-zinc-900 border border-zinc-800' : 'bg-zinc-200/50'}`}>
@@ -250,6 +262,17 @@ export default function Home() {
             </div>
           )}
         </div>
+
+        {/* Yeni Eklenen Uyarı Kutucuğu */}
+        {results.ready && !isCalculating && (
+          <div className={`mt-4 mx-2 p-4 rounded-2xl text-center text-[11px] transition-all duration-500 border font-medium ${
+            darkMode 
+              ? 'bg-zinc-900/40 border-zinc-800 text-zinc-500' 
+              : 'bg-zinc-100/60 border-zinc-200 text-zinc-500 shadow-sm'
+          }`}>
+            ⚠️ Küsuratlardan kaynaklı alınması gereken puanda 0.2'ye kadar hata payı olabilir.
+          </div>
+        )}
       </div>
 
       <footer className="w-full max-w-md mt-10 mb-6 flex items-center justify-center gap-4">
